@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create - FeedbackVibe</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="topbar">
+        <h1 class="webtitle">FeedbackVibe</h1>
+        <div class="vertical-line"></div>
+        <select id="dropdown" name="dropdown">
+            <option value="option1">Mathematics</option>
+            <option value="option2">Geography</option>
+            <option value="option3">History</option>
+            <option value="option4">Physics</option>
+            <option value="option5">Chemistry</option>
+            <option value="option6">Literature</option>
+            <option value="option7">Languages</option>
+            <option value="option8">Other</option>
+        </select>
+        <a href="#" onclick="click5()" class="Create">Create</a>
+        <div class="vertical2-line"></div>
+        
+    </div>
+
+    <div class="sidebar">
+
+        <h1 class="sideheaders">Utilities</h1>
+
+       <div style="display: flex;">
+          <img src="./ic--round-home.svg" alt="Home" class="homeIcon">
+          <a href="#" onclick="click1()" class="Home">Home</a>
+        </div>
+
+       <div style="display: flex;">
+          <img src="./basil--login-solid.svg" alt="Login" class="loginIcon">
+          <a href="#" onclick="click2()" class="Login">Login</a>
+       </div>
+
+       <div style="display: flex;">
+        <img src="./bitcoin-icons--sign-filled.svg" alt="Sign Up" onclick="click3()" class="loginIcon">
+        <a href="#" class="Login">Sign Up</a>
+       </div>
+
+       <BR>
+        <BR>
+       <!--<hr>
+       <h1 class="sideheaders2">Most Points</h1>-->
+
+    </div>
+
+    <div class="createBack">
+        <BR>
+        <h1 class="createTitle">Create Your Feedback Forum!</h1>
+        <div style="display: flex;">
+            <input type="text" class="prodTitle" id="prodTitle" name="prodTitle" placeholder="Enter Project Title..."><br>
+            <input class="prodLink" id="prodLink" name="prodLink" placeholder="Enter Product Link..."><br>
+        </div>
+        <input type="text" class="prodDesc" id="prodDesc" name="prodDesc" placeholder="Enter Project Description..."><br><br>
+        <select class="createDrop" id="createDrop" name="Choose Product Category">
+            <option value="option1">Mathematics</option>
+            <option value="option2">Geography</option>
+            <option value="option3">History</option>
+            <option value="option4">Physics</option>
+            <option value="option5">Chemistry</option>
+            <option value="option6">Literature</option>
+            <option value="option7">Languages</option>
+            <option value="option8">Other</option>
+        </select>
+        <BR><BR>
+        <input class="CreateButton" type="submit" id="create" value="Create">
+    </div>
+
+    
+
+
+    <script src="index.js"></script>
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, set, ref, push, child, onValue, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+    
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyABZdqikZLx6WeVtwdI8SuXYZ6ffp3hLlI",
+      authDomain: "feedbackvibe-4dd74.firebaseapp.com",
+      databaseURL: "https://feedbackvibe-4dd74-default-rtdb.firebaseio.com",
+      projectId: "feedbackvibe-4dd74",
+      storageBucket: "feedbackvibe-4dd74.appspot.com",
+      messagingSenderId: "715835981208",
+      appId: "1:715835981208:web:de7f7c767161a1e679ffed"
+    };
+    
+    var create = document.getElementById('create')
+    
+    // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+    function createForum(){
+        const id = push(child(ref(database), 'forum')).key;
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date+' '+time;
+        var projTitle = document.getElementById('prodTitle').value;
+        var projLink = document.getElementById('prodLink').value;
+        var projDesc = document.getElementById('prodDesc').value;
+        var category = document.getElementById('createDrop').value;
+        var likes = 0;
+        var comments = 0;
+       
+        set(ref(database, 'forums/' + category + '/' + id),{
+            projTitle: projTitle,
+            projLink: projLink,
+            projDesc: projDesc,
+            date: dateTime,
+            likes: likes,
+            comments: comments,
+        })
+
+        alert("Forum has been created!");
+        window.open( "index.html","_blank");
+    }
+
+    
+
+    create.addEventListener('click',(e) => {
+        e.preventDefault()
+        createForum();
+       })
+
+
+    
+  
+      </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FeedbackVibe</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="topbar">
+        <h1 class="webtitle">FeedbackVibe</h1>
+        <div class="vertical-line"></div>
+        <select id="dropdown" name="dropdown">
+            <option value="option1">Mathematics</option>
+            <option value="option2">Geography</option>
+            <option value="option3">History</option>
+            <option value="option4">Physics</option>
+            <option value="option5">Chemistry</option>
+            <option value="option6">Literature</option>
+            <option value="option7">Languages</option>
+            <option value="option8">Other</option>
+        </select>
+        <a href="#" onclick="click5()" class="Create">Create</a>
+        <div class="vertical2-line"></div>
+        
+    </div>
+
+    <div class="sidebar">
+
+        <h1 class="sideheaders">Utilities</h1>
+
+       <div style="display: flex;">
+          <img src="./ic--round-home.svg" alt="Home" class="homeIcon">
+          <a href="#" onclick="click1()" class="Home">Home</a>
+        </div>
+
+       <div style="display: flex;">
+          <img src="./basil--login-solid.svg" alt="Login" class="loginIcon">
+          <a href="#" onclick="click2()" class="Login">Login</a>
+       </div>
+
+       <div style="display: flex;">
+        <img src="./bitcoin-icons--sign-filled.svg" alt="Sign Up" onclick="click3()" class="loginIcon">
+        <a href="#" class="Login">Sign Up</a>
+       </div>
+
+       <BR>
+        <BR>
+       <!--<hr>
+       <h1 class="sideheaders2">Most Points</h1> -->
+
+       
+
+    </div>
+
+    <div class="signUp">
+        <h1 class="signTitle">Already have an Account? Login!</h1>
+  
+        <form name="credBox" id="credBox">
+          <input type="text" class="email" id="email" name="email" placeholder="Email (For example: Maximus@gmail.com)"><br>
+          <input class="name" id="full_name" name="name" placeholder="Name (For example: Maximus)"><br>
+          <input type="password" class="password" id="password" name="password" placeholder="Password (For example: Maximus@12345)"><br><br>
+          <BR>
+          <input class="SignUp1Button" type="submit" id="login" value="Login!">
+        </form>
+      </div>
+
+      
+
+    <script src="index.js"></script>
+    <script type="module">
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+      import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+  
+  // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyABZdqikZLx6WeVtwdI8SuXYZ6ffp3hLlI",
+        authDomain: "feedbackvibe-4dd74.firebaseapp.com",
+        databaseURL: "https://feedbackvibe-4dd74-default-rtdb.firebaseio.com",
+        projectId: "feedbackvibe-4dd74",
+        storageBucket: "feedbackvibe-4dd74.appspot.com",
+        messagingSenderId: "715835981208",
+        appId: "1:715835981208:web:de7f7c767161a1e679ffed"
+    };
+    
+    var login = document.getElementById('login')
+    
+    // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth();
+        console.log('hiiii')
+  
+    
+    login.addEventListener('click',(e)=>{
+      console.log('hii')
+      e.preventDefault();
+       var email = document.getElementById('email').value;
+       var password = document.getElementById('password').value;
+       var full_name = document.getElementById('full_name').value;
+       sessionStorage.setItem("full_name", full_name);
+
+          signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+
+            const user = userCredential.user;
+            
+
+            const dt = new Date();
+             update(ref(database, 'users/' + user.uid),{
+              last_login: dt,
+            })
+    
+             alert('User logged in!');
+             
+             window.open( "index.html","_blank");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+    
+            alert(errorMessage);
+      });
+      
+     });
+
+    </script>
+</body>
+</html>

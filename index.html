@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - FeedbackVibe</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="topbar">
+        <h1 class="webtitle">FeedbackVibe</h1>
+        <div class="vertical-line"></div>
+        <select id="dropdown" name="dropdown">
+            <option value="option1">Mathematics</option>
+            <option value="option2">Geography</option>
+            <option value="option3">History</option>
+            <option value="option4">Physics</option>
+            <option value="option5">Chemistry</option>
+            <option value="option6">Literature</option>
+            <option value="option7">Languages</option>
+            <option value="option8">Other</option>
+        </select>
+        <a href="#" onclick="click5()" class="Create">Create</a>
+        <div class="vertical2-line"></div>
+        
+    </div>
+
+    <div class="sidebar">
+
+        <h1 class="sideheaders">Utilities</h1>
+
+       <div style="display: flex;">
+          <img src="./ic--round-home.svg" alt="Home" class="homeIcon">
+          <a href="#" onclick="click1()" class="Home">Home</a>
+        </div>
+
+       <div style="display: flex;">
+          <img src="./basil--login-solid.svg" alt="Login" class="loginIcon">
+          <a href="#" onclick="click2()" class="Login">Login</a>
+       </div>
+
+       <div style="display: flex;">
+        <img src="./bitcoin-icons--sign-filled.svg" alt="Sign Up" onclick="click3()" class="loginIcon">
+        <a href="#" onclick="click3()" class="Login">Sign Up</a>
+       </div>
+
+       <BR>
+        <BR>
+       <!-- <hr> -->
+       <!-- <h1 class="sideheaders2">Most Points</h1> -->
+
+    </div>
+
+    <div class="TitleBar">
+        <h1 class="TitleMoment">
+            Top Discussions
+        </h1>
+    </div>
+
+    <div class="amongus" id = "amongus">
+    </div>
+
+    <script src="index.js"></script>
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, set, ref, push, child, onValue, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+    
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyABZdqikZLx6WeVtwdI8SuXYZ6ffp3hLlI",
+      authDomain: "feedbackvibe-4dd74.firebaseapp.com",
+      databaseURL: "https://feedbackvibe-4dd74-default-rtdb.firebaseio.com",
+      projectId: "feedbackvibe-4dd74",
+      storageBucket: "feedbackvibe-4dd74.appspot.com",
+      messagingSenderId: "715835981208",
+      appId: "1:715835981208:web:de7f7c767161a1e679ffed"
+    };
+    
+    // Initialize Firebase
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        var dropdown = document.getElementById('dropdown')
+
+        var option = dropdown.value
+
+        var forumsRef = ref(database, 'forums/' + option)
+        onChildAdded(forumsRef, (data) =>{
+            renderOption(data.val().likes, data.val().comments, data.val().projTitle, data.key)
+        }) 
+
+        function renderOption(likes, comments, title, id){
+            var heartImage = document.createElement('img')
+            heartImage.src = "https://img.icons8.com/FF0000/ios-filled/50/like--v1.png";
+            console.log(likes, comments, title)
+
+            var numberOfLikes = document.createElement("p")
+            var numberOfComments = document.createElement("p")
+            var projectTitle = document.createElement("h4")
+            var container = document.getElementById("amongus")
+            var subcontainer = document.createElement("button")
+
+            numberOfLikes.innerText = likes + " " + "Like(s)" 
+            numberOfComments.innerText = comments + " " + "Comments"
+            projectTitle.innerText = title
+
+            numberOfLikes.classList.add("p")
+            /* heartImage.classList.add("heart") */
+            numberOfComments.classList.add("p")
+            subcontainer.classList.add("subcontainer")
+            
+            container.appendChild(subcontainer)
+            subcontainer.appendChild(projectTitle)
+            subcontainer.appendChild(numberOfLikes)
+            subcontainer.appendChild(numberOfComments)
+            /* subcontainer.appendChild(heartImage)  */
+            
+            subcontainer.addEventListener('click',(e) => {
+                sessionStorage.setItem("forumID", id);
+                console.log(option)
+                sessionStorage.setItem("category", option)
+                
+                window.open("forum.html","_blank");
+            })
+
+        }
+
+        
+
+        
+        
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum - FeedbackVibe</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="topbar">
+        <h1 class="webtitle">FeedbackVibe</h1>
+        <div class="vertical-line"></div>
+        <select id="dropdown" name="dropdown">
+            <option value="option1">Mathematics</option>
+            <option value="option2">Geography</option>
+            <option value="option3">History</option>
+            <option value="option4">Physics</option>
+            <option value="option5">Chemistry</option>
+            <option value="option6">Literature</option>
+            <option value="option7">Languages</option>
+            <option value="option8">Other</option>
+        </select>
+        <a href="#" onclick="click5()" class="Create">Create</a>
+        <div class="vertical2-line"></div>
+        
+    </div>
+
+    <div class="sidebar">
+
+        <h1 class="sideheaders">Utilities</h1>
+
+       <div style="display: flex;">
+          <img src="./ic--round-home.svg" alt="Home" class="homeIcon">
+          <a href="#" onclick="click1()" class="Home">Home</a>
+        </div>
+
+       <div style="display: flex;">
+          <img src="./basil--login-solid.svg" alt="Login" class="loginIcon">
+          <a href="#" onclick="click2()" class="Login">Login</a>
+       </div>
+
+       <div style="display: flex;">
+        <img src="./bitcoin-icons--sign-filled.svg" alt="Sign Up" onclick="click3()" class="loginIcon">
+        <a href="#" class="Login">Sign Up</a>
+       </div>
+       <BR><BR>
+       <!--<hr>
+       <h1 class="sideheaders2">Most Points</h1>-->
+
+    </div>
+
+    <div class="forumInfo">
+<BR>
+      <div class="titleHolder" id="titleHolder">
+        <p id="e" style="padding-left: 10px; padding-top: 5px;"></p>
+      </div>
+      <div class="linkHolder" id="linkHolder">
+        <p id="e2" style="padding-left: 10px; padding-top: 5px;"></p>
+      </div>
+      <div class="descHolder" id="descHolder">
+        <p id="e3" style="padding-left: 10px; padding-bottom: 10px"></p>
+      </div>
+      <div style="display: flex;">
+        <img src="./mdi--heart-outline.svg" alt="heartOutline" class="heartLine" id="heartOutline">
+        <div class="dateHolder" id="dateHolder">
+          <p id="e4" style="padding-left: 10px; padding-bottom: 10px"></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="display: flex;" class="feedback">
+      <h1 class="Feedback">Feedback</a>
+      <img src="./emojione-monotone--left-speech-bubble.svg" alt="Speech" class="FeedbackIcon">
+    </div>
+
+    <div class="chatContainer" id="chatContainer">
+    </div>
+
+    <div style="display: flex;" class="input">
+      <input class="chatType" type="text" id="msg" placeholder="Enter your Message">
+      <button id="submit" class="submitButton"><img src="./ion--send.svg" class="sendIcon"></button>
+  </div>
+
+  
+
+    <script src="index.js"></script>
+
+    <script type="module">
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getDatabase, set, ref, push, child, onValue, onChildAdded, increment, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    
+      const firebaseConfig = {
+        apiKey: "AIzaSyABZdqikZLx6WeVtwdI8SuXYZ6ffp3hLlI",
+        authDomain: "feedbackvibe-4dd74.firebaseapp.com",
+        databaseURL: "https://feedbackvibe-4dd74-default-rtdb.firebaseio.com",
+        projectId: "feedbackvibe-4dd74",
+        storageBucket: "feedbackvibe-4dd74.appspot.com",
+        messagingSenderId: "715835981208",
+        appId: "1:715835981208:web:de7f7c767161a1e679ffed"
+      };
+    
+      var submit = document.getElementById('submit')
+
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      var forumID = sessionStorage.getItem("forumID");
+      var category = sessionStorage.getItem("category");
+      var likes = sessionStorage.getItem("likes")
+      var projectTitle = "";
+      var projectLink = "";
+      var projectDesc = "";
+      var dateTime = "";
+
+
+      const forumRef = ref(database, 'forums/' + category + "/" + forumID);
+        onValue(forumRef, (snapshot) => {
+        const data = snapshot.val();
+        document.getElementById("e").innerText = data.projTitle;
+        document.getElementById("e2").innerText = data.projLink;
+        document.getElementById("e3").innerText = data.projDesc;
+        document.getElementById("e4").innerText = data.date;
+        });
+
+      
+        
+      
+      heartOutline.addEventListener('click',(e) => {
+        toggleHeartImage()
+      })
+  
+      var heartImage = document.getElementById('heartOutline');
+      var isHeartOutline = true;
+      function toggleHeartImage() {
+          const likeRef = ref(database, 'forums/' + category + '/' + forumID);
+          if (isHeartOutline) {
+          heartImage.src = "./mdi--heart.svg";
+          heartImage.alt = "heart";
+          const updates = {};
+          updates['forums/' + category + '/' + forumID + '/likes'] = increment(1)
+          update(ref(database), updates);
+          
+
+          } else {
+            heartImage.src = "./mdi--heart-outline.svg";
+            heartImage.alt = "heartOutline";
+            const updates = {};
+            updates['forums/' + category + '/' + forumID + '/likes'] = increment(-1)
+            update(ref(database), updates);
+           
+        }        
+          isHeartOutline = !isHeartOutline;          
+      }     
+
+      submit.addEventListener('click', (e)=> {
+        var msg = document.getElementById('msg').value;
+        var name = sessionStorage.getItem('full_name');
+        alert("Comment has been posted!")
+        const updates = {};
+        updates['forums/' + category + '/' + forumID + '/comments'] = increment(1)
+        update(ref(database), updates);
+    
+        if (name == null){
+              name = "Anonymous";
+          }
+          else {
+              name = name;
+        }
+    
+        const id = push(child(ref(database), 'msg')).key;
+        sessionStorage.setItem("id", id)
+        var today = new Date();
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var dateTime = date+' '+time;
+    
+        set(ref(database, 'forums/' + category + "/" + forumID + '/' + 'message/' + id), {
+          name: name,
+          msg: msg,
+          date: dateTime,
+        })
+       
+      })
+
+      var id = sessionStorage.getItem("id");
+      var msgRef = ref(database, 'forums/' + category + "/" + forumID + '/' + 'message')
+      onChildAdded(msgRef, (data)=>{
+        renderMsg(data.val().msg, data.val().name, data.val().date, data.key)
+        console.log(data.val().name, data.val().dateTime, data.val().msg)
+        console.log('forums/' + category + "/" + forumID + '/' + 'message/' + id)
+      })
+
+      
+      function renderMsg(msg, name, date) {
+        var messageSent = document.createElement("p")
+        var nameAndDate = document.createElement("h4")
+        var chatContainer = document.getElementById("chatContainer")
+        var chatSubContainer = document.createElement("div")
+        
+        messageSent.innerText = msg
+        nameAndDate.innerText = name + " " + date
+
+        messageSent.classList.add("p")
+        nameAndDate.classList.add("h4")
+        chatSubContainer.classList.add("userMessage")
+
+        chatContainer.appendChild(chatSubContainer)
+        chatSubContainer.appendChild(nameAndDate)    
+        chatSubContainer.appendChild(messageSent)
+            
+
+        if (name == sessionStorage.getItem("full_name")) {
+          nameAndDate.innerText = name + " " + "(You)" + " " + date 
+          messageSent.classList.add("ownMsg")
+          nameAndDate.classList.add("ownMsg")
+        }
+        
+      } 
+    
+
+  </script>
+
+
+</body>
+</html>
