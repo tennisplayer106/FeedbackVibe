@@ -446,7 +446,6 @@ hr {
    
 .ownMsg {
     background-color: lightgreen;
-    max-width: 350px;
-    border-radius: 15px;
-    padding-left: 10px;
+    max-width: 840px;
+    border-radius: 10px;
 }
